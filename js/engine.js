@@ -85,13 +85,14 @@ var Engine = (function(global) {
 		ctx.fillText('Collect gems for extra points', textX, textY + 180);
 		ctx.fillText('or hearts to re-up your health.', textX, textY + 210);
 		ctx.fillText('Press Enter to start', textX, textY + 270);
-		
+		// Add key listener
 		document.onkeyup = function(e) {
 			var key = e.keyCode ? e.keyCode : e.which;
 			if (key === 13) chooseCharacter();
 		}
     }
 
+	// Call function to render characters, add key listener
 	function chooseCharacter() {
 		render();
 		renderChars(chosenChar);
@@ -114,6 +115,7 @@ var Engine = (function(global) {
 		}
 	}
 	
+	// Render character choices
 	function renderChars(chosenChar) {
 		ctx.fillStyle = 'black';
 		ctx.fillRect(0,250,500,200);
@@ -245,7 +247,7 @@ var Engine = (function(global) {
     function reset() {
 		gameStarted = false;
 		
-		// Instructions
+		// Game over message
 		ctx.fillStyle = 'black';
 		ctx.fillRect(50,100,400,400);
 		ctx.font = '40px Courier New';
@@ -257,6 +259,7 @@ var Engine = (function(global) {
 		ctx.fillText('You scored ' + score + scoreText, 250, 300);
 		ctx.fillText('Press Enter to play again', 250, 420);
 		
+		// Add key listeners
 		document.onkeyup = function(e) {
 			var key = e.keyCode ? e.keyCode : e.which;
 			if (key === 13) {

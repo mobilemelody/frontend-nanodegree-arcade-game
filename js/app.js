@@ -98,17 +98,20 @@ Player.prototype.reset = function() {
 		this.x = 2;
 		this.y = 5;
 	} 
-	if (hearts < 5) heartGem.active = true;
+	// Activate heart gem if not already active and if health is not full
+	if (hearts < 5 && !heartGem.active) heartGem.regenerate();
 }
 
 // Gem class
-var Gem = function(type, points, health, start) {
+var Gem = function(type, points, health, start, timeout) {
 	this.sprite = gemTypes[type];
 	this.x = Math.floor((Math.random() * 4) + 1);
 	this.y = Math.floor((Math.random() * 3) + 1);
 	this.points = points;	// extra points
 	this.health = health;	// extra health
 	this.active = start;
+	this.timer;
+	this.timeout = timeout;
 }
 Gem.prototype = Object.create(Enemy.prototype);
 Gem.prototype.constructor = Gem;
@@ -117,14 +120,17 @@ Gem.prototype.update = function() {
 		score += this.points;
 		hearts += this.health;
 		this.active = false;
-		this.regenerate();
+		clearTimeout(this.timer);
+		// Regenerate gem. If heart gem, only generate if health is not full
+		if (this != heartGem || hearts < 5) this.regenerate();
+		if (this === heartGem && hearts > 4) clearTimeout(this.timer);
 	}
 }
 Gem.prototype.regenerate = function() {
 	var obj = this;
 	this.x = Math.floor((Math.random() * 4) + 1);
 	this.y = Math.floor((Math.random() * 3) + 1);
-	setTimeout(function(){ obj.active = true }, 3000);
+	this.timer = setTimeout(function(){ obj.active = true }, obj.timeout);
 }
 
 // Now instantiate your objects.
@@ -137,8 +143,8 @@ for (i = 0; i < numEnemies; i++) {
 	var speed = Math.floor((Math.random() * 5) + 1);
 	allEnemies.push(new Enemy(x, y, speed));
 }
-var gem = new Gem(0, 5, 0, true);
-var heartGem = new Gem(1, 0, 1, false);
+var gem = new Gem(0, 5, 0, true, 3000);
+var heartGem = new Gem(1, 0, 1, false, 10000);
 var player = new Player();
 
 // This listens for key presses and sends the keys to your
