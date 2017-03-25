@@ -131,13 +131,13 @@ Gem.prototype.update = function() {
 }
 Gem.prototype.regenerate = function() {
 	var obj = this;
-	this.x = Math.floor((Math.random() * 4) + 1);
+	this.x = Math.floor(Math.random() * 5);
 	this.y = Math.floor((Math.random() * 3) + 1);
 	clearTimeout(this.timer);
 	this.timer = setTimeout(function(){ obj.active = true }, obj.timeout);
 }
 Gem.prototype.reset = function() {
-	this.x = Math.floor((Math.random() * 4) + 1);
+	this.x = Math.floor((Math.random() * 5);
 	this.y = Math.floor((Math.random() * 3) + 1);
 	clearTimeout(this.timer);
 }
