@@ -120,16 +120,15 @@ Gem.prototype.update = function() {
 		score += this.points;
 		hearts += this.health;
 		this.active = false;
-		clearTimeout(this.timer);
 		// Regenerate gem. If heart gem, only generate if health is not full
 		if (this != heartGem || hearts < 5) this.regenerate();
-		if (this === heartGem && hearts > 4) clearTimeout(this.timer);
 	}
 }
 Gem.prototype.regenerate = function() {
 	var obj = this;
 	this.x = Math.floor((Math.random() * 4) + 1);
 	this.y = Math.floor((Math.random() * 3) + 1);
+	clearTimeout(this.timer);
 	this.timer = setTimeout(function(){ obj.active = true }, obj.timeout);
 }
 
@@ -144,7 +143,7 @@ for (i = 0; i < numEnemies; i++) {
 	allEnemies.push(new Enemy(x, y, speed));
 }
 var gem = new Gem(0, 5, 0, true, 3000);
-var heartGem = new Gem(1, 0, 1, false, 10000);
+var heartGem = new Gem(1, 0, 1, false, 5000);
 var player = new Player();
 
 // This listens for key presses and sends the keys to your

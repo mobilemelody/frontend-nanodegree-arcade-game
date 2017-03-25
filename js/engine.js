@@ -246,6 +246,7 @@ var Engine = (function(global) {
      */
     function reset() {
 		gameStarted = false;
+		hearts = heartsStart;
 		
 		// Game over message
 		ctx.fillStyle = 'black';
@@ -258,15 +259,28 @@ var Engine = (function(global) {
 		var scoreText = (score === 1) ? ' point' : ' points';
 		ctx.fillText('You scored ' + score + scoreText, 250, 300);
 		ctx.fillText('Press Enter to play again', 250, 420);
+		ctx.fillText('or Space to change your player', 250, 450);
 		
 		// Add key listeners
 		document.onkeyup = function(e) {
 			var key = e.keyCode ? e.keyCode : e.which;
 			if (key === 13) {
+				resetObjects();
+				render();
 				startGame();
+			} else if (key === 32) {
+				render();
+				chooseCharacter();
 			}
 		}
     }
+
+	function resetObjects() {
+		gem.regenerate();
+		heartGem.regenerate();
+		heartGem.active = false;
+		player.reset();
+	}
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
