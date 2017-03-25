@@ -94,22 +94,28 @@ var Engine = (function(global) {
 
 	// Call function to render characters, add key listener
 	function chooseCharacter() {
+		choosingChar = true;
 		render();
 		renderChars(chosenChar);
+		var choice = chosenChar;
 		document.onkeyup = function(e) {
 			var key = e.keyCode ? e.keyCode : e.which;
-			if (key === 13) {
-				startGame();
-				player.sprite = characters[chosenChar];
-			} else if (key === 37) { // left
-				if (chosenChar > 0) {
-					chosenChar -= 1;
-					renderChars(chosenChar);
-				}
-			} else if (key === 39) { // right
-				if (chosenChar < characters.length - 1) {
-					chosenChar += 1;
-					renderChars(chosenChar);
+			if (choosingChar) {
+				if (key === 13) {
+					choosingChar = false;
+					chosenChar = choice;
+					player.sprite = characters[chosenChar];
+					chooseLevel();
+				} else if (key === 37) { // left
+					if (choice > 0) {
+						choice--;
+						renderChars(choice);
+					}
+				} else if (key === 39) { // right
+					if (choice < characters.length - 1) {
+						choice++;
+						renderChars(choice);
+					}
 				}
 			}
 		}
@@ -118,7 +124,7 @@ var Engine = (function(global) {
 	// Render character choices
 	function renderChars(chosenChar) {
 		ctx.fillStyle = 'black';
-		ctx.fillRect(0,250,500,200);
+		ctx.fillRect(0,250,505,200);
 		ctx.font = '20px Courier New';
 		ctx.fillStyle = 'white';
 		ctx.textAlign = 'center';
@@ -128,6 +134,50 @@ var Engine = (function(global) {
 		}); 
 		ctx.strokeStyle='#FFFFFF';
 		ctx.strokeRect(chosenChar * 101 + 10,320,80,100);
+	}
+	
+	// Choose level
+	function chooseLevel() {
+		choosingLevel = true;
+		render();
+		renderLevels(level);
+		var choice = level;
+		document.onkeyup = function(e) {
+			var key = e.keyCode ? e.keyCode : e.which;
+			if (choosingLevel) {
+				if (key === 13) {
+					choosingLevel = false;
+					level = choice;
+					generateEnemies(level);
+					startGame();
+				} else if (key === 37) { // left
+					if (choice > 0) {
+						choice--;
+						renderLevels(choice);
+					}
+				} else if (key === 39) { // right
+					if (choice < levelNames.length - 1) {
+						choice++;
+						renderLevels(choice);
+					}
+				}
+			}
+		}
+	}
+	
+	// Render levels dialog box
+	function renderLevels(level) {
+		ctx.fillStyle = 'black';
+		ctx.fillRect(0,250,505,200);
+		ctx.font = '20px Courier New';
+		ctx.fillStyle = 'white';
+		ctx.textAlign = 'center';
+		ctx.fillText('Choose a level', 250, 300);
+		levelNames.forEach(function(item, index) {
+			ctx.fillText(item, index * 150 + 100, 350);
+		}); 
+		ctx.strokeStyle='#FFFFFF';
+		ctx.strokeRect(level * 150 + 50,320,100,50);
 	}
 
 	function startGame() {
@@ -259,7 +309,7 @@ var Engine = (function(global) {
 		var scoreText = (score === 1) ? ' point' : ' points';
 		ctx.fillText('You scored ' + score + scoreText, 250, 300);
 		ctx.fillText('Press Enter to play again', 250, 420);
-		ctx.fillText('or Space to change your player', 250, 450);
+		ctx.fillText('or Space to change game options', 250, 450);
 		
 		// Add key listeners
 		document.onkeyup = function(e) {
@@ -269,6 +319,7 @@ var Engine = (function(global) {
 				render();
 				startGame();
 			} else if (key === 32) {
+				resetObjects();
 				render();
 				chooseCharacter();
 			}
@@ -276,8 +327,9 @@ var Engine = (function(global) {
     }
 
 	function resetObjects() {
-		gem.regenerate();
-		heartGem.regenerate();
+		gem.reset();
+		gem.active = true;
+		heartGem.reset();
 		heartGem.active = false;
 		player.reset();
 	}

@@ -1,4 +1,7 @@
-var numEnemies = 15;
+var level = 0;
+var levelNames = ['easy','medium','hard'];
+var numEnemies = [10, 15, 20];
+var maxSpeed = [3, 5, 7];
 
 var scoreStart = 0;
 var heartsStart = 5;
@@ -7,6 +10,8 @@ var score = scoreStart;
 var hearts = heartsStart;
 
 var gameStarted = false;
+var choosingChar = false;
+var choosingLevel = false;
 
 var characters = [
 	'images/char-boy.png',
@@ -46,7 +51,7 @@ Enemy.prototype.update = function(dt) {
 		this.x = -Math.floor((Math.random() * 50) + 1);
 	}
 	if (Math.ceil(this.x) === player.x && this.y === player.y) {
-		hearts -= 1;
+		hearts--;
 		player.reset();
 	}
 
@@ -78,18 +83,18 @@ Player.prototype.handleInput = function(key) {
 			break;
 		case "up":
 			if (this.y === 1) {
-				this.y -= 1;
+				this.y--;
 				this.reset();
-				score += 1;
+				score++;
 			} else if (this.y > 1) {
-				this.y -= 1;
+				this.y--;
 			}
 			break;
 		case "right":
-			if (this.x < 4) this.x += 1;
+			if (this.x < 4) this.x++;
 			break;
 		case "down":
-			if (this.y < 5) this.y += 1;
+			if (this.y < 5) this.y++;
 	}
 }
 
@@ -131,16 +136,25 @@ Gem.prototype.regenerate = function() {
 	clearTimeout(this.timer);
 	this.timer = setTimeout(function(){ obj.active = true }, obj.timeout);
 }
+Gem.prototype.reset = function() {
+	this.x = Math.floor((Math.random() * 4) + 1);
+	this.y = Math.floor((Math.random() * 3) + 1);
+	clearTimeout(this.timer);
+}
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var allEnemies = [];
-for (i = 0; i < numEnemies; i++) {
-	var x = -Math.floor((Math.random() * 50) + 1);
-	var y = Math.floor((Math.random() * 3) + 1);
-	var speed = Math.floor((Math.random() * 5) + 1);
-	allEnemies.push(new Enemy(x, y, speed));
+generateEnemies(level);
+function generateEnemies(level){
+	allEnemies = [];
+	for (i = 0; i < numEnemies[level]; i++) {
+		var x = -Math.floor((Math.random() * 30) + 1);
+		var y = Math.floor((Math.random() * 3) + 1);
+		var speed = Math.floor((Math.random() * maxSpeed[level]) + 1);
+		allEnemies.push(new Enemy(x, y, speed));
+	}
 }
 var gem = new Gem(0, 5, 0, true, 3000);
 var heartGem = new Gem(1, 0, 1, false, 5000);
