@@ -85,12 +85,49 @@ var Engine = (function(global) {
 		document.onkeyup = function(e) {
 			var key = e.keyCode ? e.keyCode : e.which;
 			if (key === 13) {
-        		startGame();
+				chooseCharacter();
 			}
 		}
     }
 
+	function chooseCharacter() {
+		render();
+		renderChars(chosenChar);
+		document.onkeyup = function(e) {
+			var key = e.keyCode ? e.keyCode : e.which;
+			if (key === 13) {
+				startGame();
+				player.sprite = characters[chosenChar];
+			} else if (key === 37) { // left
+				if (chosenChar > 0) {
+					chosenChar -= 1;
+				}
+				renderChars(chosenChar);
+			} else if (key === 39) { // right
+				if (chosenChar < characters.length - 1) {
+					chosenChar += 1;
+				}
+				renderChars(chosenChar);
+			}
+		}
+	}
+	
+	function renderChars(chosenChar) {
+		ctx.fillStyle = 'black';
+		ctx.fillRect(0,250,500,200);
+		ctx.font = '20px Courier New';
+		ctx.fillStyle = 'white';
+		ctx.textAlign = 'center';
+		ctx.fillText('Choose your character', 250, 300);
+		characters.forEach(function(item, index) {
+			ctx.drawImage(Resources.get(item), index * 101, 270);
+		}); 
+		ctx.strokeStyle='#FFFFFF';
+		ctx.strokeRect(chosenChar * 101 + 10,320,80,100);
+	}
+
 	function startGame() {
+		gameStarted = true;
 		score = scoreStart;
 		hearts = heartsStart;
 		lastTime = Date.now();
@@ -164,7 +201,7 @@ var Engine = (function(global) {
             }
         }
 
-        renderEntities();
+        if (gameStarted) renderEntities();
     }
 
     /* This function is called by the render function and is called on each game
@@ -199,13 +236,16 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
+		gameStarted = false;
+		
 		// Instructions
 		ctx.fillStyle = 'black';
 		ctx.fillRect(50,100,400,400);
-		ctx.font = '20px Courier New';
+		ctx.font = '40px Courier New';
 		ctx.fillStyle = 'white';
 		ctx.textAlign = 'center';
 		ctx.fillText('GAME OVER', 250, 250);
+		ctx.font = '20px Courier New';
 		var scoreText = (score === 1) ? ' point' : ' points';
 		ctx.fillText('You scored ' + score + scoreText, 250, 300);
 		ctx.fillText('Press Enter to play again', 250, 420);
@@ -229,6 +269,9 @@ var Engine = (function(global) {
         'images/enemy-bug.png',
         'images/char-boy.png',
 		'images/char-cat-girl.png',
+		'images/char-horn-girl.png',
+		'images/char-pink-girl.png',
+		'images/char-princess-girl.png',
 		'images/Heart.png',
     ]);
     Resources.onReady(init);

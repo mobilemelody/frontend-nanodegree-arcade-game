@@ -1,10 +1,21 @@
-var numEnemies = 20;
+var numEnemies = 15;
 
 var scoreStart = 0;
 var heartsStart = 5;
 
 var score = scoreStart;
 var hearts = heartsStart;
+
+var gameStarted = false;
+
+var characters = [
+	'images/char-boy.png',
+	'images/char-cat-girl.png',
+	'images/char-horn-girl.png',
+	'images/char-pink-girl.png',
+	'images/char-princess-girl.png'
+]
+var chosenChar = 0;
 
 // Enemies our player must avoid
 var Enemy = function(x, y, speed) {
@@ -46,7 +57,7 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function () {
-	this.sprite = 'images/char-cat-girl.png';
+	this.sprite = characters[chosenChar];
 	this.x = 2;
 	this.y = 5;
 	this.speed = 0;
@@ -107,5 +118,5 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
-    player.handleInput(allowedKeys[e.keyCode]);
+    if (gameStarted) player.handleInput(allowedKeys[e.keyCode]);
 });
