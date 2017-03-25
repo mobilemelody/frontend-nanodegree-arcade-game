@@ -136,6 +136,8 @@ var Engine = (function(global) {
             }
         }
 
+		
+
         renderEntities();
     }
 
@@ -152,6 +154,17 @@ var Engine = (function(global) {
         });
 
         player.render();
+		
+		ctx.fillStyle = 'black';
+		ctx.fillRect(0,0,505,40);
+		
+		ctx.font = '20px Arial';
+		ctx.fillStyle = 'white';
+		ctx.fillText('Score: ' + score, 10, 25);
+		
+		for (i = 0; i < hearts; i++) {
+			ctx.drawImage(Resources.get('images/Heart.png'), 300 + (i * 25), 0, 25, 35);
+		}
     }
 
     /* This function does nothing but it could have been a good place to
@@ -171,7 +184,9 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+		'images/char-cat-girl.png',
+		'images/Heart.png',
     ]);
     Resources.onReady(init);
 
