@@ -70,17 +70,21 @@ var Engine = (function(global) {
     function init() {
 		render();	
 		// Instructions
+		var textX = 250;
+		var textY = 180;
 		ctx.fillStyle = 'black';
 		ctx.fillRect(50,100,400,400);
 		ctx.font = '20px Courier New';
 		ctx.fillStyle = 'white';
 		ctx.textAlign = 'center';
-		ctx.fillText('Cross the road without', 250, 200);
-		ctx.fillText('getting hit by a bug.', 250, 230);
-		ctx.fillText('Earn 1 point each time', 250, 280);
-		ctx.fillText('you cross successfully.', 250, 310);
-		ctx.fillText('You have ' + hearts + ' tries total.', 250, 360);
-		ctx.fillText('Press Enter to start', 250, 420);
+		ctx.fillText('Cross the road without', textX, textY);
+		ctx.fillText('getting hit by a bug.', textX, textY + 30);
+		ctx.fillText('Earn 1 point each time', textX, textY + 70);
+		ctx.fillText('you cross successfully.', textX, textY + 100);
+		ctx.fillText('You have ' + hearts + ' tries total.', textX, textY + 140);
+		ctx.fillText('Collect gems for extra points', textX, textY + 180);
+		ctx.fillText('or hearts to re-up your health.', textX, textY + 210);
+		ctx.fillText('Press Enter to start', textX, textY + 270);
 		
 		document.onkeyup = function(e) {
 			var key = e.keyCode ? e.keyCode : e.which;
@@ -158,6 +162,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
 		gem.update();
+		heartGem.update();
         player.update();
     }
 
@@ -211,7 +216,8 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-		if (gemActive) gem.render();
+		if (gem.active) gem.render();
+		if (heartGem.active) heartGem.render();
 		
         allEnemies.forEach(function(enemy) {
             enemy.render();

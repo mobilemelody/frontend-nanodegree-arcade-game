@@ -7,7 +7,6 @@ var score = scoreStart;
 var hearts = heartsStart;
 
 var gameStarted = false;
-var gemActive = true;
 
 var characters = [
 	'images/char-boy.png',
@@ -15,6 +14,10 @@ var characters = [
 	'images/char-horn-girl.png',
 	'images/char-pink-girl.png',
 	'images/char-princess-girl.png'
+]
+var gemTypes = [
+	'images/gem-blue.png',
+	'images/Heart.png'
 ]
 var chosenChar = 0;
 
@@ -43,8 +46,8 @@ Enemy.prototype.update = function(dt) {
 		this.x = -Math.floor((Math.random() * 50) + 1);
 	}
 	if (Math.ceil(this.x) === player.x && this.y === player.y) {
-		player.reset();
 		hearts -= 1;
+		player.reset();
 	}
 
 };
@@ -95,28 +98,33 @@ Player.prototype.reset = function() {
 		this.x = 2;
 		this.y = 5;
 	} 
+	if (hearts < 5) heartGem.active = true;
 }
 
 // Gem class
-var Gem = function(x, y) {
-	this.sprite = 'images/gem-blue.png';
-	this.x = x;
-	this.y = y;
-	this.value = 5;	// extra points
+var Gem = function(type, points, health, start) {
+	this.sprite = gemTypes[type];
+	this.x = Math.floor((Math.random() * 4) + 1);
+	this.y = Math.floor((Math.random() * 3) + 1);
+	this.points = points;	// extra points
+	this.health = health;	// extra health
+	this.active = start;
 }
 Gem.prototype = Object.create(Enemy.prototype);
 Gem.prototype.constructor = Gem;
 Gem.prototype.update = function() {
-	if (this.x === player.x && this.y === player.y && gemActive) {
-		score += this.value;
-		gemActive = false;
+	if (this.x === player.x && this.y === player.y && this.active) {
+		score += this.points;
+		hearts += this.health;
+		this.active = false;
 		this.regenerate();
 	}
 }
 Gem.prototype.regenerate = function() {
+	var obj = this;
 	this.x = Math.floor((Math.random() * 4) + 1);
 	this.y = Math.floor((Math.random() * 3) + 1);
-	setTimeout(function(){ gemActive = true }, 3000);
+	setTimeout(function(){ obj.active = true }, 3000);
 }
 
 // Now instantiate your objects.
@@ -129,7 +137,8 @@ for (i = 0; i < numEnemies; i++) {
 	var speed = Math.floor((Math.random() * 5) + 1);
 	allEnemies.push(new Enemy(x, y, speed));
 }
-var gem = new Gem(Math.floor((Math.random() * 4) + 1), Math.floor((Math.random() * 3) + 1));
+var gem = new Gem(0, 5, 0, true);
+var heartGem = new Gem(1, 0, 1, false);
 var player = new Player();
 
 // This listens for key presses and sends the keys to your
