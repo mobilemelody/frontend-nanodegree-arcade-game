@@ -1,6 +1,10 @@
 var numEnemies = 20;
-var score = 0;
-var hearts = 5;
+
+var scoreStart = 0;
+var heartsStart = 5;
+
+var score = scoreStart;
+var hearts = heartsStart;
 
 // Enemies our player must avoid
 var Enemy = function(x, y, speed) {
@@ -78,9 +82,7 @@ Player.prototype.reset = function() {
 	if (hearts > 0) {
 		this.x = 2;
 		this.y = 5;
-	} else {
-		reset();
-	}
+	} 
 }
 
 // Now instantiate your objects.

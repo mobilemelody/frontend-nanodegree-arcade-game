@@ -56,7 +56,11 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        win.requestAnimationFrame(main);
+        if (hearts > 0) {
+			win.requestAnimationFrame(main);
+		} else {
+			reset();
+		}
     }
 
     /* This function does some initial setup that should only occur once,
@@ -64,9 +68,7 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        reset();
-		render();
-		
+		render();	
 		// Instructions
 		ctx.fillStyle = 'black';
 		ctx.fillRect(50,100,400,400);
@@ -77,17 +79,23 @@ var Engine = (function(global) {
 		ctx.fillText('getting hit by a ladybug.', 250, 230);
 		ctx.fillText('Earn 1 point each time', 250, 280);
 		ctx.fillText('you cross successfully.', 250, 310);
-		ctx.fillText('You have 5 tries total.', 250, 360);
+		ctx.fillText('You have ' + hearts + ' tries total.', 250, 360);
 		ctx.fillText('Press Enter to start', 250, 420);
 		
 		document.onkeyup = function(e) {
 			var key = e.keyCode ? e.keyCode : e.which;
 			if (key === 13) {
-        		lastTime = Date.now();
-        		main();
+        		startGame();
 			}
 		}
     }
+
+	function startGame() {
+		score = scoreStart;
+		hearts = heartsStart;
+		lastTime = Date.now();
+		main();
+	}
 
     /* This function is called by main (our game loop) and itself calls all
      * of the functions which may need to update entity's data. Based on how
@@ -178,6 +186,7 @@ var Engine = (function(global) {
 		
 		ctx.font = '20px Courier New';
 		ctx.fillStyle = 'white';
+		ctx.textAlign = 'left';
 		ctx.fillText('Score: ' + score, 10, 25);
 		
 		for (i = 0; i < hearts; i++) {
@@ -190,7 +199,23 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
+		// Instructions
+		ctx.fillStyle = 'black';
+		ctx.fillRect(50,100,400,400);
+		ctx.font = '20px Courier New';
+		ctx.fillStyle = 'white';
+		ctx.textAlign = 'center';
+		ctx.fillText('GAME OVER', 250, 250);
+		var scoreText = (score === 1) ? ' point' : ' points';
+		ctx.fillText('You scored ' + score + scoreText, 250, 300);
+		ctx.fillText('Press Enter to play again', 250, 420);
+		
+		document.onkeyup = function(e) {
+			var key = e.keyCode ? e.keyCode : e.which;
+			if (key === 13) {
+				startGame();
+			}
+		}
     }
 
     /* Go ahead and load all of the images we know we're going to need to
