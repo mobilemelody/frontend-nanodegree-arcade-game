@@ -7,6 +7,7 @@ var score = scoreStart;
 var hearts = heartsStart;
 
 var gameStarted = false;
+var gemActive = true;
 
 var characters = [
 	'images/char-boy.png',
@@ -50,7 +51,7 @@ Enemy.prototype.update = function(dt) {
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83);
+    ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 20);
 };
 
 // Now write your own player class
@@ -96,6 +97,28 @@ Player.prototype.reset = function() {
 	} 
 }
 
+// Gem class
+var Gem = function(x, y) {
+	this.sprite = 'images/gem-blue.png';
+	this.x = x;
+	this.y = y;
+	this.value = 5;	// extra points
+}
+Gem.prototype = Object.create(Enemy.prototype);
+Gem.prototype.constructor = Gem;
+Gem.prototype.update = function() {
+	if (this.x === player.x && this.y === player.y && gemActive) {
+		score += this.value;
+		gemActive = false;
+		this.regenerate();
+	}
+}
+Gem.prototype.regenerate = function() {
+	this.x = Math.floor((Math.random() * 4) + 1);
+	this.y = Math.floor((Math.random() * 3) + 1);
+	setTimeout(function(){ gemActive = true }, 3000);
+}
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
@@ -106,6 +129,7 @@ for (i = 0; i < numEnemies; i++) {
 	var speed = Math.floor((Math.random() * 5) + 1);
 	allEnemies.push(new Enemy(x, y, speed));
 }
+var gem = new Gem(Math.floor((Math.random() * 4) + 1), Math.floor((Math.random() * 3) + 1));
 var player = new Player();
 
 // This listens for key presses and sends the keys to your

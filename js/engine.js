@@ -76,7 +76,7 @@ var Engine = (function(global) {
 		ctx.fillStyle = 'white';
 		ctx.textAlign = 'center';
 		ctx.fillText('Cross the road without', 250, 200);
-		ctx.fillText('getting hit by a ladybug.', 250, 230);
+		ctx.fillText('getting hit by a bug.', 250, 230);
 		ctx.fillText('Earn 1 point each time', 250, 280);
 		ctx.fillText('you cross successfully.', 250, 310);
 		ctx.fillText('You have ' + hearts + ' tries total.', 250, 360);
@@ -84,9 +84,7 @@ var Engine = (function(global) {
 		
 		document.onkeyup = function(e) {
 			var key = e.keyCode ? e.keyCode : e.which;
-			if (key === 13) {
-				chooseCharacter();
-			}
+			if (key === 13) chooseCharacter();
 		}
     }
 
@@ -101,13 +99,13 @@ var Engine = (function(global) {
 			} else if (key === 37) { // left
 				if (chosenChar > 0) {
 					chosenChar -= 1;
+					renderChars(chosenChar);
 				}
-				renderChars(chosenChar);
 			} else if (key === 39) { // right
 				if (chosenChar < characters.length - 1) {
 					chosenChar += 1;
+					renderChars(chosenChar);
 				}
-				renderChars(chosenChar);
 			}
 		}
 	}
@@ -159,6 +157,7 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+		gem.update();
         player.update();
     }
 
@@ -212,6 +211,8 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
+		if (gemActive) gem.render();
+		
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
@@ -273,6 +274,7 @@ var Engine = (function(global) {
 		'images/char-pink-girl.png',
 		'images/char-princess-girl.png',
 		'images/Heart.png',
+		'images/gem-blue.png',
     ]);
     Resources.onReady(init);
 
