@@ -75,8 +75,12 @@ Player.prototype.handleInput = function(key) {
 }
 
 Player.prototype.reset = function() {
-	this.x = 2;
-	this.y = 5;
+	if (hearts > 0) {
+		this.x = 2;
+		this.y = 5;
+	} else {
+		reset();
+	}
 }
 
 // Now instantiate your objects.

@@ -65,8 +65,28 @@ var Engine = (function(global) {
      */
     function init() {
         reset();
-        lastTime = Date.now();
-        main();
+		render();
+		
+		// Instructions
+		ctx.fillStyle = 'black';
+		ctx.fillRect(50,100,400,400);
+		ctx.font = '20px Courier New';
+		ctx.fillStyle = 'white';
+		ctx.textAlign = 'center';
+		ctx.fillText('Cross the road without', 250, 200);
+		ctx.fillText('getting hit by a ladybug.', 250, 230);
+		ctx.fillText('Earn 1 point each time', 250, 280);
+		ctx.fillText('you cross successfully.', 250, 310);
+		ctx.fillText('You have 5 tries total.', 250, 360);
+		ctx.fillText('Press Enter to start', 250, 420);
+		
+		document.onkeyup = function(e) {
+			var key = e.keyCode ? e.keyCode : e.which;
+			if (key === 13) {
+        		lastTime = Date.now();
+        		main();
+			}
+		}
     }
 
     /* This function is called by main (our game loop) and itself calls all
@@ -136,8 +156,6 @@ var Engine = (function(global) {
             }
         }
 
-		
-
         renderEntities();
     }
 
@@ -158,7 +176,7 @@ var Engine = (function(global) {
 		ctx.fillStyle = 'black';
 		ctx.fillRect(0,0,505,40);
 		
-		ctx.font = '20px Arial';
+		ctx.font = '20px Courier New';
 		ctx.fillStyle = 'white';
 		ctx.fillText('Score: ' + score, 10, 25);
 		
